@@ -36,15 +36,12 @@ breads.get('/nuke', (req, res) => {
 // SHOW
 breads.get('/:id', (req, res) => {
   Bread.findById(req.params.id)
-    .then(foundBread => {
-      res.render('Show', {
-        bread: foundBread
+      .then(foundBread => {
+        res.render('show', {
+            bread: foundBread
+        })
       })
     })
-    .catch(err => {
-      res.render('error')
-    })
-})
 
 // CREATE
 breads.post('/', (req, res) => {
