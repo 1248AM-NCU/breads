@@ -26,7 +26,13 @@ breads.get('/fill', (req, res) => {
       res.redirect('/breads')
     })
 })
-
+//oh no
+breads.get('/nuke', (req, res) => {
+  Bread.deleteMany({}) 
+    .then(destroyed => {
+      res.redirect('/breads')
+    })
+})
 // SHOW
 breads.get('/:id', (req, res) => {
   Bread.findById(req.params.id)
