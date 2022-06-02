@@ -24,11 +24,16 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
     console.log('nomming at port', PORT);
   })
-// Breads
+// breads
 const breadsController = require('./controllers/breads_controller.js')
 app.use('/breads', breadsController)
 
+// bakers 
+const bakersController = require('./controllers/bakers_controller.js')
+app.use('/bakers', bakersController)
+
 // 404 Page
 app.get('*', (req, res) => {
-  res.send('404')
+  res.send('error')
 })
+
