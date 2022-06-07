@@ -4,16 +4,21 @@ const Bread = require('../models/bread.js')
 // somewhere at the top with the other dependencies 
 const Baker = require('../models/baker.js')
 
-// INDEX
+// Index:
 breads.get('/', (req, res) => {
-  Bread.find()
+  Baker.find()
+    .then(foundBakers => {
+      Bread.find()
       .then(foundBreads => {
           res.render('index', {
               breads: foundBreads,
+              bakers: foundBakers,
               title: 'Index Page'
           })
       })
+    })
 })
+
 
 //NEW
 breads.get('/new', (req, res) => {
@@ -42,12 +47,17 @@ breads.get('/nuke', (req, res) => {
 // SHOW
 breads.get('/:id', (req, res) => {
   Bread.findById(req.params.id)
+      .populate('baker')
       .then(foundBread => {
         res.render('show', {
             bread: foundBread
         })
       })
-    })
+      .catch(err => {
+        res.send('error')
+      })
+})
+
 
 // CREATE
 breads.post('/', (req, res) => {
@@ -59,6 +69,7 @@ breads.post('/', (req, res) => {
   } else {
     req.body.hasGluten = false
   }
+  console.log(req.body)
   Bread.create(req.body)
   res.redirect('/breads')
 })
