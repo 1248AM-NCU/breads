@@ -3,7 +3,6 @@ const express = require('express')
 const baker = express.Router()
 const Baker = require('../models/baker.js')
 const bakerSeedData = require('../models/baker_seed.js')
-
 // Index: 
 baker.get('/', (req, res) => {
     Baker.find()
@@ -13,21 +12,33 @@ baker.get('/', (req, res) => {
         })
 })
 
-// Show: 
+
+// delete
+baker.delete('/:id', (req, res) => {
+    Baker.findByIdAndDelete(req.params.id) 
+      .then(deletedBaker => { 
+        res.status(303).redirect('/breads')
+      })
+})
+
+baker.get('/fill', (req, res) => {
+    console.log("Refilling bakers")
+    Baker.insertMany(bakerSeedData)
+        .then(res.redirect('/breads'))
+})
+
+// show 
 baker.get('/:id', (req, res) => {
     Baker.findById(req.params.id)
-        .populate('breads')
+        .populate({
+            path: 'breads',
+            options: { limit: 2 }
+        })
         .then(foundBaker => {
             res.render('bakerShow', {
                 baker: foundBaker
             })
         })
-})
-
-
-baker.get('/fill', (req, res) => {
-    Baker.insertMany(bakerSeedData)
-        .then(res.redirect('/breads'))
 })
 
 // export
